@@ -7,7 +7,7 @@ namespace SampleUserRepo.Context
 {
     public partial class crsuserauthdeContext : DbContext
     {
-        private readonly string connectionString;
+         private readonly string connectionString;
         public crsuserauthdeContext()
         {
         }
