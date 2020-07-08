@@ -18,6 +18,6 @@ namespace SampleUserRepo.Models
         public DateTime SysCreated { get; set; }
         public Guid SysModifier { get; set; }
         public DateTime SysModified { get; set; }
-        public Guid? CountryId { get; set; }
+        public string CountryCode { get; set; }
     }
 }

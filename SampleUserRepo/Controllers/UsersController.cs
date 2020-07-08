@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SampleUserRepo.Context;
+using SampleUserRepo.Interfaces;
 using SampleUserRepo.Models;
 
 namespace SampleUserRepo.Controllers
@@ -15,10 +16,12 @@ namespace SampleUserRepo.Controllers
     public class UsersController : ControllerBase
     {
         private readonly crsuserauthdeContext _context;
+        private readonly ICountryPreferenceService _countryPreference;
 
-        public UsersController(crsuserauthdeContext context)
+        public UsersController(crsuserauthdeContext context, ICountryPreferenceService preference)
         {
             _context = context;
+            _countryPreference = preference;
         }
 
         // GET: api/Users
@@ -80,12 +83,32 @@ namespace SampleUserRepo.Controllers
         [HttpPost]
         public async Task<ActionResult<Users>> PostUsers(Users users)
         {
-            _context.Users.Add(users);
+           
             try
             {
+                _context.Users.Add(users);
+                var preference = _countryPreference.GetPreferenceByCountryId(users.CountryCode);
+                UserPreferences obj = new UserPreferences();
+              if (preference != null)
+                {
+                     obj = new UserPreferences()
+                    {
+                        DateFormat = preference.DateFormat,
+                        Language = preference.Language,
+                        NumberFormat = preference.NumberFormat,
+                        TimeFormat = preference.TimeFormat,
+                        TimeZone = preference.TimeZone,
+                        UserId = users.UserId
+                    };
+
+                    _context.UserPreferences.Add(obj);
+                }
+
+                
+               
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
                 if (UsersExists(users.UserId))
                 {

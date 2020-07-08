@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SampleUserRepo.Context;
+using SampleUserRepo.Interfaces;
 using SampleUserRepo.Models;
 
 namespace SampleUserRepo.Controllers
@@ -15,17 +16,19 @@ namespace SampleUserRepo.Controllers
     public class CountryPreferencesController : ControllerBase
     {
         private readonly crsuserauthdeContext _context;
+        private readonly ITimeZonesService _timezoneService;
 
-        public CountryPreferencesController(crsuserauthdeContext context)
+        public CountryPreferencesController(crsuserauthdeContext context, ITimeZonesService timezoneService)
         {
             _context = context;
+            _timezoneService = timezoneService;
         }
 
         // GET: api/CountryPreferences
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CountryPreference>>> GetCountryPreference()
+        public async Task<ActionResult<List<Country>>> GetCountryPreference()
         {
-            return await _context.CountryPreference.ToListAsync();
+            return _timezoneService.GetListOfCountries();
         }
 
         // GET: api/CountryPreferences/5

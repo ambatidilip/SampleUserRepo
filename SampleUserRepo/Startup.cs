@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SampleUserRepo.Context;
 using System.Collections.Generic;
+using SampleUserRepo.services;
+using SampleUserRepo.Interfaces;
 
 namespace SampleUserRepo
 {
@@ -144,17 +146,31 @@ namespace SampleUserRepo
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+
+            builder.RegisterType<TimeZonesService>().As<ITimeZonesService>()
+              .InstancePerLifetimeScope();
+
+
             builder.RegisterType<crsuserauthdeContext>()
               .AsSelf()
               .InstancePerLifetimeScope()
               .UsingConstructor(typeof(string))
               .WithParameters(new List<Parameter>
               {
-                    new NamedParameter("connectionString", this.Configuration.GetValue<string>("ConnectionStrings:SampleAudit"))
+                    new NamedParameter("connectionString", this.Configuration.GetValue<string>("ConnectionStrings:SampleUserRepo"))
 
               });
 
-
+            builder.RegisterType<CountryPreferenceService>()
+              .As<ICountryPreferenceService>()
+              .UsingConstructor(typeof(crsuserauthdeContext))
+              .WithParameters(new List<Parameter>
+              {
+                    new ResolvedParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(crsuserauthdeContext),
+                    (pi, ctx) => ctx.Resolve<crsuserauthdeContext>())
+              });
+            
 
         }
 

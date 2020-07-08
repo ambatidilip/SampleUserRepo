@@ -80,9 +80,11 @@ namespace SampleUserRepo.Controllers
         [HttpPost]
         public async Task<ActionResult<UserPreferences>> PostUserPreferences(UserPreferences userPreferences)
         {
-            _context.UserPreferences.Add(userPreferences);
+            
             try
             {
+                _context.UserPreferences.Add(userPreferences);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
@@ -100,7 +102,7 @@ namespace SampleUserRepo.Controllers
             return CreatedAtAction("GetUserPreferences", new { id = userPreferences.UserId }, userPreferences);
         }
 
-        // DELETE: api/UserPreferences/5
+        /*// DELETE: api/UserPreferences/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserPreferences>> DeleteUserPreferences(Guid id)
         {
@@ -114,7 +116,7 @@ namespace SampleUserRepo.Controllers
             await _context.SaveChangesAsync();
 
             return userPreferences;
-        }
+        }*/
 
         private bool UserPreferencesExists(Guid id)
         {
