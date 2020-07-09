@@ -74,33 +74,6 @@ namespace SampleUserRepo.Controllers
             return NoContent();
         }
 
-        // POST: api/UserPreferences
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<UserPreferences>> PostUserPreferences(UserPreferences userPreferences)
-        {
-            
-            try
-            {
-                _context.UserPreferences.Add(userPreferences);
-
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserPreferencesExists(userPreferences.UserId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetUserPreferences", new { id = userPreferences.UserId }, userPreferences);
-        }
 
         /*// DELETE: api/UserPreferences/5
         [HttpDelete("{id}")]

@@ -11,10 +11,10 @@ namespace SampleUserRepo.Interfaces
     {
         List<TimeZoneInfo> GetAllTimeZones();
 
-        HashSet<string> GetTimeZoneId();
 
         List<Country> GetListOfCountries();
 
-        HashSet<string> GetTimeZoneId(string CountryId);
+        HashSet<string> GetTimeZonesByCountryId(string countryCode);
+
     }
 }

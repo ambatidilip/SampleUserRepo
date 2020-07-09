@@ -1,34 +1,54 @@
 ﻿using NodaTime.TimeZones;
-using SampleUserRepo.Context;
+using SampleUserRepo.Constants;
 using SampleUserRepo.Interfaces;
 using SampleUserRepo.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SampleUserRepo.services
 {
     public class CountryPreferenceService: ICountryPreferenceService
     {
-        private readonly crsuserauthdeContext _context;
-        public CountryPreferenceService(crsuserauthdeContext context)
+
+        private readonly ITimeZonesService _timezoneService;
+        public CountryPreferenceService( ITimeZonesService timezoneService)
         {
-            _context = context;
+            _timezoneService = timezoneService;
         }
 
-        public CountryPreference GetPreferenceByCountryId(string countryId)
+        public CountryPreference GetPreferenceByCountryCode(string countryCode)
         {
-           var list =  this.GetTimeZonesByCountryId(countryId);
-            return this._context.CountryPreference.FirstOrDefault((x) => x.TimeZone == list.FirstOrDefault());
-        }
+            CountryPreference obj = new CountryPreference();
+            var listOfCountries = this._timezoneService.GetListOfCountries();
 
-        public List<string> GetTimeZonesByCountryId(string countryId)
-        {
+            var country = listOfCountries.Where(x => x.Code == countryCode).FirstOrDefault();
+            if(country == null)
+            {
+                throw new Exception("CountryIDNotFound");
+            }
+            else
+            {
+               
+                var regionInfo = new RegionInfo(country.Code);
+                string zoneId = this._timezoneService.GetTimeZonesByCountryId(country.Code).FirstOrDefault();
 
-            var zoneIds = TzdbDateTimeZoneSource.Default.ZoneLocations.Where(x => x.CountryCode == countryId).Select(c => c.ZoneId);
+                CultureInfo cul = new CultureInfo(country.Code);
+                var format = cul.NumberFormat;
+                obj = new CountryPreference()
+                {
+                    CountryCode = country.Code,
+                    DateFormat = cul.DateTimeFormat.ShortDatePattern,
+                    Id = Guid.NewGuid(),
+                    Language = LanguageFormats.ENGLISH_US,
+                    // NumberFormat = regionInfo.CurrencySymbol, // Need to replace with reg-ex
+                    TimeFormat = TimeFormats.HH_COLON_MM_AM_PM,
+                    TimeZone = zoneId
+                };
+            }
 
-            return zoneIds.ToList();
-
+            return obj;
         }
     }
 }

@@ -87,25 +87,21 @@ namespace SampleUserRepo.Controllers
             try
             {
                 _context.Users.Add(users);
-                var preference = _countryPreference.GetPreferenceByCountryId(users.CountryCode);
-                UserPreferences obj = new UserPreferences();
-              if (preference != null)
+                var preference = _countryPreference.GetPreferenceByCountryCode(users.CountryCode);
+                UserPreferences  obj = new UserPreferences()
                 {
-                     obj = new UserPreferences()
-                    {
-                        DateFormat = preference.DateFormat,
-                        Language = preference.Language,
-                        NumberFormat = preference.NumberFormat,
-                        TimeFormat = preference.TimeFormat,
-                        TimeZone = preference.TimeZone,
-                        UserId = users.UserId
-                    };
+                    DateFormat = preference.DateFormat,
+                    Language = preference.Language,
+                    NumberFormat = preference.NumberFormat,
+                    TimeFormat = preference.TimeFormat,
+                    TimeZone = preference.TimeZone,
+                    UserId = users.UserId,
+                    CountryCode = users.CountryCode
+                };
 
-                    _context.UserPreferences.Add(obj);
-                }
+                _context.UserPreferences.Add(obj);
 
-                
-               
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)

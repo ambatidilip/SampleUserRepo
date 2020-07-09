@@ -36,25 +36,6 @@ namespace SampleUserRepo.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CountryPreference>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.CountryCode)
-                    .HasMaxLength(8)
-                    .HasDefaultValueSql("('MY')");
-
-                entity.Property(e => e.DateFormat).HasMaxLength(20);
-
-                entity.Property(e => e.Language).HasMaxLength(40);
-
-                entity.Property(e => e.NumberFormat).HasMaxLength(50);
-
-                entity.Property(e => e.TimeFormat).HasMaxLength(20);
-
-                entity.Property(e => e.TimeZone).HasMaxLength(60);
-            });
-
             modelBuilder.Entity<UserPreferences>(entity =>
             {
                 entity.HasKey(e => e.UserId);

@@ -8,8 +8,7 @@ namespace SampleUserRepo.Interfaces
 {
    public interface ICountryPreferenceService
     {
-       CountryPreference GetPreferenceByCountryId(string countryId);
+       CountryPreference GetPreferenceByCountryCode(string countryCode);
 
-        List<string> GetTimeZonesByCountryId(string countryId);
     }
 }

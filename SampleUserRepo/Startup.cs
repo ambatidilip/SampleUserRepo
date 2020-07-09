@@ -163,12 +163,12 @@ namespace SampleUserRepo
 
             builder.RegisterType<CountryPreferenceService>()
               .As<ICountryPreferenceService>()
-              .UsingConstructor(typeof(crsuserauthdeContext))
+              .UsingConstructor( typeof(ITimeZonesService))
               .WithParameters(new List<Parameter>
               {
-                    new ResolvedParameter(
-                    (pi, ctx) => pi.ParameterType == typeof(crsuserauthdeContext),
-                    (pi, ctx) => ctx.Resolve<crsuserauthdeContext>())
+                       new ResolvedParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(ITimeZonesService),
+                    (pi, ctx) => ctx.Resolve<ITimeZonesService>())
               });
             
 
