@@ -72,10 +72,6 @@ namespace SampleUserRepo.Context
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CountryCode)
-                    .HasMaxLength(8)
-                    .HasDefaultValueSql("('MY')");
-
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(255);
