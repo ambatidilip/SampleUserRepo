@@ -5,6 +5,11 @@ namespace SampleUserRepo.Models
 {
     public partial class Users
     {
+        public Users()
+        {
+            UserPreference = new HashSet<UserPreference>();
+        }
+
         public Guid UserId { get; set; }
         public string Name { get; set; }
         public string UserName { get; set; }
@@ -18,5 +23,8 @@ namespace SampleUserRepo.Models
         public DateTime SysCreated { get; set; }
         public Guid SysModifier { get; set; }
         public DateTime SysModified { get; set; }
+        public string CountryCode { get; set; }
+
+        public virtual ICollection<UserPreference> UserPreference { get; set; }
     }
 }

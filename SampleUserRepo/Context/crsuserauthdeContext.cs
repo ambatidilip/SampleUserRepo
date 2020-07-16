@@ -23,7 +23,7 @@ namespace SampleUserRepo.Context
         }
 
         public virtual DbSet<CountryPreference> CountryPreference { get; set; }
-        public virtual DbSet<UserPreferences> UserPreferences { get; set; }
+        public virtual DbSet<UserPreference> UserPreference { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,25 +36,84 @@ namespace SampleUserRepo.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserPreferences>(entity =>
+            modelBuilder.Entity<CountryPreference>(entity =>
             {
-                entity.HasKey(e => e.UserId);
-
-                entity.Property(e => e.UserId).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CountryCode)
-                    .HasMaxLength(8)
-                    .HasDefaultValueSql("('MY')");
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .IsFixedLength();
 
-                entity.Property(e => e.DateFormat).HasMaxLength(20);
+                entity.Property(e => e.CultureCode)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
 
-                entity.Property(e => e.Language).HasMaxLength(40);
+                entity.Property(e => e.DateFormat)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NumberFormat).HasMaxLength(50);
+                entity.Property(e => e.SysCreated)
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("(sysutcdatetime())");
 
-                entity.Property(e => e.TimeFormat).HasMaxLength(20);
+                entity.Property(e => e.SysModified)
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("(sysutcdatetime())");
 
-                entity.Property(e => e.TimeZone).HasMaxLength(60);
+                entity.Property(e => e.TimeFormat)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TimeZoneId)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.CultureCode)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.DateFormat)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SysCreated)
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("(sysutcdatetime())");
+
+                entity.Property(e => e.SysModified)
+                    .HasColumnType("datetime2(0)")
+                    .HasDefaultValueSql("(sysutcdatetime())");
+
+                entity.Property(e => e.TimeFormat)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TimeZoneId)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserPreference)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserPreference_Users");
             });
 
             modelBuilder.Entity<Users>(entity =>
@@ -71,6 +130,11 @@ namespace SampleUserRepo.Context
                 entity.Property(e => e.ApiSecret)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.CountryCode)
+                    .HasMaxLength(3)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('SG')");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -98,6 +162,25 @@ namespace SampleUserRepo.Context
             OnModelCreatingPartial(modelBuilder);
         }
 
+        internal void Commit()
+        {
+            // throw new NotImplementedException();
+        }
+
+        internal void BeginTransaction()
+        {
+            // throw new NotImplementedException();
+        }
+
+        internal void Rollback()
+        {
+           // throw new NotImplementedException();
+        }
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
+
+
     }
 }

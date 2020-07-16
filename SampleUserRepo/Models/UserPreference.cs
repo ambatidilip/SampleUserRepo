@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace SampleUserRepo.Models
 {
-    public partial class CountryPreference
+    public partial class UserPreference
     {
         public Guid Id { get; set; }
-        public string CountryCode { get; set; }
+        public Guid UserId { get; set; }
         public string CultureCode { get; set; }
         public string DateFormat { get; set; }
         public string TimeFormat { get; set; }
@@ -15,5 +15,7 @@ namespace SampleUserRepo.Models
         public DateTime SysCreated { get; set; }
         public Guid SysModifier { get; set; }
         public DateTime SysModified { get; set; }
+
+        public virtual Users User { get; set; }
     }
 }

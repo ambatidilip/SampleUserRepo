@@ -11,10 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SampleUserRepo.Context;
 using System.Collections.Generic;
+using SampleUserRepo.Context;
 using SampleUserRepo.services;
 using SampleUserRepo.Interfaces;
+//using SampleUserRepo.services;
 
 namespace SampleUserRepo
 {
@@ -94,7 +95,7 @@ namespace SampleUserRepo
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAutoMapper(typeof(Startup));
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -147,9 +148,9 @@ namespace SampleUserRepo
         public void ConfigureContainer(ContainerBuilder builder)
         {
 
-            builder.RegisterType<TimeZonesService>().As<ITimeZonesService>()
-              .InstancePerLifetimeScope();
-
+            //builder.RegisterType<TimeZonesService>().As<ITimeZonesService>()
+            //  .InstancePerLifetimeScope();
+            builder.RegisterType<CountryPreferenceService>().As<ICountryPreferenceService>().InstancePerLifetimeScope();
 
             builder.RegisterType<crsuserauthdeContext>()
               .AsSelf()
@@ -161,16 +162,16 @@ namespace SampleUserRepo
 
               });
 
-            builder.RegisterType<CountryPreferenceService>()
-              .As<ICountryPreferenceService>()
-              .UsingConstructor( typeof(ITimeZonesService))
-              .WithParameters(new List<Parameter>
-              {
-                       new ResolvedParameter(
-                    (pi, ctx) => pi.ParameterType == typeof(ITimeZonesService),
-                    (pi, ctx) => ctx.Resolve<ITimeZonesService>())
-              });
-            
+
+
+            builder.RegisterType<SqlDbRepository>().As<IDbRepository>().InstancePerLifetimeScope().UsingConstructor(typeof(crsuserauthdeContext))
+             .WithParameters(new List<Parameter>
+             {
+                    new ResolvedParameter(
+                    (pi, ctx) => pi.ParameterType == typeof(crsuserauthdeContext),
+                    (pi, ctx) => ctx.Resolve<crsuserauthdeContext>())
+             }); ;
+
 
         }
 

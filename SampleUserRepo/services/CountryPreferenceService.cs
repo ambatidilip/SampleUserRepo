@@ -1,54 +1,36 @@
-﻿using NodaTime.TimeZones;
-using SampleUserRepo.Constants;
+﻿using AutoMapper;
 using SampleUserRepo.Interfaces;
 using SampleUserRepo.Models;
+using SampleUserRepo.Models.Services;
+using SampleUserRepo.Resources;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SampleUserRepo.services
 {
-    public class CountryPreferenceService: ICountryPreferenceService
+    public class CountryPreferenceService : ICountryPreferenceService
     {
+        private readonly IDbRepository dbRepository;
+        private readonly IMapper mapper;
 
-        private readonly ITimeZonesService _timezoneService;
-        public CountryPreferenceService( ITimeZonesService timezoneService)
+        public CountryPreferenceService( IDbRepository dbRepository, IMapper mapper)
         {
-            _timezoneService = timezoneService;
+ 
+            this.dbRepository = dbRepository ?? throw new ArgumentNullException(nameof(dbRepository));
+            this.mapper = mapper;
         }
 
-        public CountryPreference GetPreferenceByCountryCode(string countryCode)
+        public async Task<CountryPreferenceResponse> GetCountryPreference(string countryCode)
         {
-            CountryPreference obj = new CountryPreference();
-            var listOfCountries = this._timezoneService.GetListOfCountries();
-
-            var country = listOfCountries.Where(x => x.Code == countryCode).FirstOrDefault();
-            if(country == null)
+            return await Task.Run(() =>
             {
-                throw new Exception("CountryIDNotFound");
-            }
-            else
-            {
-               
-                var regionInfo = new RegionInfo(country.Code);
-                string zoneId = this._timezoneService.GetTimeZonesByCountryId(country.Code).FirstOrDefault();
+                var result = this.dbRepository.GetItems<CountryPreference>().Where(x => x.CountryCode == "*").FirstOrDefault();
+                var preference = mapper.Map<CountryPreference, CountryPreferenceResource>(result);
+                return new CountryPreferenceResponse(preference);
+            });
 
-                CultureInfo cul = new CultureInfo(country.Code);
-                var format = cul.NumberFormat;
-                obj = new CountryPreference()
-                {
-                    CountryCode = country.Code,
-                    DateFormat = cul.DateTimeFormat.ShortDatePattern,
-                    Id = Guid.NewGuid(),
-                    Language = LanguageFormats.ENGLISH_US,
-                    // NumberFormat = regionInfo.CurrencySymbol, // Need to replace with reg-ex
-                    TimeFormat = TimeFormats.HH_COLON_MM_AM_PM,
-                    TimeZone = zoneId
-                };
-            }
-
-            return obj;
         }
     }
 }
