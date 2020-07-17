@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace SampleUserRepo.Models
+namespace SampleUserRepo.Resources
 {
-    public partial class UserPreference
+    public class UserPreferenceResource
     {
         public Guid UserPreferenceId { get; set; }
         public Guid UserId { get; set; }
@@ -11,11 +13,5 @@ namespace SampleUserRepo.Models
         public string DateFormat { get; set; }
         public string TimeFormat { get; set; }
         public string TimeZoneId { get; set; }
-        public Guid SysCreator { get; set; }
-        public DateTime SysCreated { get; set; }
-        public Guid SysModifier { get; set; }
-        public DateTime SysModified { get; set; }
-
-        public virtual Users User { get; set; }
     }
 }

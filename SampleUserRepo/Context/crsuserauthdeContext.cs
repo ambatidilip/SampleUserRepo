@@ -38,7 +38,7 @@ namespace SampleUserRepo.Context
         {
             modelBuilder.Entity<CountryPreference>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.CountryPreferenceId).ValueGeneratedNever();
 
                 entity.Property(e => e.CountryCode)
                     .IsRequired()
@@ -78,7 +78,7 @@ namespace SampleUserRepo.Context
 
             modelBuilder.Entity<UserPreference>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.UserPreferenceId).ValueGeneratedNever();
 
                 entity.Property(e => e.CultureCode)
                     .IsRequired()
@@ -132,8 +132,10 @@ namespace SampleUserRepo.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.CountryCode)
-                    .HasMaxLength(3)
+                    .IsRequired()
+                    .HasMaxLength(2)
                     .IsUnicode(false)
+                    .IsFixedLength()
                     .HasDefaultValueSql("('SG')");
 
                 entity.Property(e => e.Email)
@@ -162,6 +164,11 @@ namespace SampleUserRepo.Context
             OnModelCreatingPartial(modelBuilder);
         }
 
+        internal void Rollback()
+        {
+           // throw new NotImplementedException();
+        }
+
         internal void Commit()
         {
             // throw new NotImplementedException();
@@ -172,15 +179,6 @@ namespace SampleUserRepo.Context
             // throw new NotImplementedException();
         }
 
-        internal void Rollback()
-        {
-           // throw new NotImplementedException();
-        }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-
-
-
     }
 }

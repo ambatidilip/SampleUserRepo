@@ -12,7 +12,8 @@ namespace SampleUserRepo.Mapping
         public ResourceToModelProfile()
         {
             CreateMap<CountryPreferenceResource, CountryPreference>();
-           
+            CreateMap<UserPreferenceResource, UserPreference>();
+            
         }
     }
 }

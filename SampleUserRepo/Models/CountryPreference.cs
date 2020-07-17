@@ -5,7 +5,7 @@ namespace SampleUserRepo.Models
 {
     public partial class CountryPreference
     {
-        public Guid Id { get; set; }
+        public Guid CountryPreferenceId { get; set; }
         public string CountryCode { get; set; }
         public string CultureCode { get; set; }
         public string DateFormat { get; set; }

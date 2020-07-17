@@ -151,6 +151,7 @@ namespace SampleUserRepo
             //builder.RegisterType<TimeZonesService>().As<ITimeZonesService>()
             //  .InstancePerLifetimeScope();
             builder.RegisterType<CountryPreferenceService>().As<ICountryPreferenceService>().InstancePerLifetimeScope();
+            builder.RegisterType<UserPreferenceService>().As<IUserPreferenceService>().InstancePerLifetimeScope();
 
             builder.RegisterType<crsuserauthdeContext>()
               .AsSelf()

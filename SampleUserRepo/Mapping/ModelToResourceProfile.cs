@@ -13,7 +13,8 @@ namespace SampleUserRepo.Mapping
 
             CreateMap<QueryResult<CountryPreference>, QueryResultResource<CountryPreferenceResource>>();
 
-            
+            CreateMap<CountryPreference, UserPreferenceResource>();
+            CreateMap<UserPreference, UserPreferenceResource>();
 
         }
     }
